@@ -65,9 +65,11 @@ function checkApi($ids, $key, $token) {
     }
 
     echo '</div>'; // End of list group
+    echo '<a href="https://tools.maqoli.com/"><button type="button" class="btn btn-primary mt-3">Back</button></a>'; // End of list group
     echo '</div>'; // End of card body
     echo '</div>'; // End of card
     echo '</div>'; // End of container
     echo '</body></html>'; // Close the HTML structure
 }
 ?>
+

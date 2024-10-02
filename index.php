@@ -18,8 +18,7 @@
         /* Sticky Footer CSS */
         html, body {
             height: 100%;
-            margin: 0;
-            
+            margin: 0; 
         }
         .wrapper {
             min-height: 100%;
@@ -42,14 +41,15 @@
         <div class="content">
             <div class="container mt-5">
                 <h1 class="text-center">Resend Callback Cronosengine</h1>
-                <form action="process.php" method="post">
+                <form id="apiCheckForm" action="process.php" method="post">
                     <div class="form-group">
                         <label for="projectSelect">Select Project:</label>
                         <select class="form-control" id="projectSelect" name="projectSelect">
                             <option value="" disabled selected>Select a project</option>
                             <?php
-                            // Array of projects with keys and tokens
-                           include('project.php');
+                            // Include the project credentials array
+                            include('project.php'); // This file should contain the $projects array
+
                             // Loop through the projects array to create options
                             foreach ($projects as $name => $credentials) {
                                 echo '<option value="' . $credentials["key"] . '|' . $credentials["token"] . '">' . $name . '</option>';
@@ -67,7 +67,8 @@
                     </div>
                     <div class="form-group">
                         <label for="ids">IDs (comma-separated):</label>
-                        <textarea class="form-control" id="ids" name="ids" rows="5" required></textarea>
+                        <textarea class="form-control" id="ids" name="ids" rows="5" required placeholder='"id1", "id2", id3'></textarea>
+                        <small class="form-text text-muted">Please enter IDs in the format: "id1", "id2", id3</small>
                     </div>
                     <button type="submit" class="btn btn-primary">Check API</button>
                 </form>
@@ -95,6 +96,30 @@
                 } else {
                     $('#key').val('');
                     $('#token').val('');
+                }
+            });
+
+            // Function to format IDs
+            function formatIDs(ids) {
+                // Split the input by commas
+                let idArray = ids.split(',').map(id => id.trim()); // Trim whitespace
+                // Remove quotes from each ID
+                idArray = idArray.map(id => id.replace(/^["']|["']$/g, '')); // Remove surrounding quotes
+                // Join back into a formatted string
+                return idArray.join(', ');
+            }
+
+            // Form submission validation
+            $('#apiCheckForm').on('submit', function(event) {
+                const ids = $('#ids').val();
+                // Update IDs formatting
+                const formattedIDs = formatIDs(ids);
+                $('#ids').val(formattedIDs); // Set the formatted IDs back to the textarea
+
+                // Validation: Check if IDs are empty after formatting
+                if (!formattedIDs) {
+                    alert('Please enter valid IDs in the format: "id1", "id2", id3');
+                    event.preventDefault(); // Prevent form submission
                 }
             });
         });
